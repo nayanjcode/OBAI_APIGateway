@@ -1,0 +1,77 @@
+# application port number
+server:
+  port: 8090
+
+spring:
+  # setting application name
+  application:
+    name: apigateway
+  cloud:
+    gateway:
+      # filter to pass on the token(jwt) to requests
+      default-filters:
+        - TokenRelay
+      # routes for on which request to call which endpoint
+      routes:
+        - id: inventory-service
+          uri: lb://inventoryservice  # lb maane load balanced application that can be created using restTemplate or webClient
+          # uri: http://localhost:8082
+          predicates:
+            - Path=/inventory/**
+          filters:
+            - TokenRelay
+        - id: order-service
+          uri: lb://orderservice
+          predicates:
+            - Path=/order/**
+        - id: payment-service
+          uri: lb://paymentservice
+          # uri: http://localhost:8083
+          predicates:
+            - Path=/payment/**
+  #=> user service not implemented yet
+  # - id: user-service
+  # uri: lb://userservice
+  # predicates:
+  # - Path=/user/**
+  # Config server
+  config:
+    import: configserver:http://localhost:8091
+  # spring security configs using oAuth2
+  security:
+    oauth2:
+      # client means we will require authentication via browser or some client.
+      # If our application needs to send the request to the other service and that server needs to validate then also it can be called as client
+      client:
+        registration:
+          # oAuth info
+          auth0:
+            client-id: AZdNvbdC7RErJi42eGU7Wqx3BHarHxAW   # YOUR_CLIENT_ID
+            client-secret: bx4jVFvTxZSUhahJkrh-bpI1Fi_MaaPQOyp79_W_Q6TGgECiXQKywgAtBpAQCvWV # YOUR_CLIENT_SECRET
+            client-name: Auth0
+            provider: auth0
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8090/login/oauth2/code/auth0" # redirect to login page in case you are not authenticated
+            scope:
+              - openid
+              - profile
+              - email
+
+        provider:
+          auth0:
+            issuer-uri: https://dev-zrv8mh7b8k6bay3x.us.auth0.com/
+
+# uname-psswd based authentication. Default one for spring security
+#    user:
+#      name: nayan
+#      password: abc123
+
+# Eureka service discovery/registry configs - Now moved to config server
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
