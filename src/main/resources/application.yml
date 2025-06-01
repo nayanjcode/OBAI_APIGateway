@@ -37,7 +37,31 @@ spring:
   # Config server
   config:
     import: configserver:http://localhost:8091
-  # spring security configs using oAuth2
+# spring security configs using Auth0 for oAuth2
+#  security:
+#    oauth2:
+#      # client means we will require authentication via browser or some client.
+#      # If our application needs to send the request to the other service and that server needs to validate then also it can be called as client
+#      client:
+#        registration:
+#          # oAuth info
+#          auth0:
+#            client-id: AZdNvbdC7RErJi42eGU7Wqx3BHarHxAW   # YOUR_CLIENT_ID
+#            client-secret: bx4jVFvTxZSUhahJkrh-bpI1Fi_MaaPQOyp79_W_Q6TGgECiXQKywgAtBpAQCvWV # YOUR_CLIENT_SECRET
+#            client-name: Auth0
+#            provider: auth0
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "http://localhost:8090/login/oauth2/code/auth0" # redirect to login page in case you are not authenticated
+#            scope:
+#              - openid
+#              - profile
+#              - email
+#
+#        provider:
+#          auth0:
+#            issuer-uri: https://dev-zrv8mh7b8k6bay3x.us.auth0.com/
+
+# Security configs using OKTA
   security:
     oauth2:
       # client means we will require authentication via browser or some client.
@@ -45,21 +69,25 @@ spring:
       client:
         registration:
           # oAuth info
-          auth0:
-            client-id: AZdNvbdC7RErJi42eGU7Wqx3BHarHxAW   # YOUR_CLIENT_ID
-            client-secret: bx4jVFvTxZSUhahJkrh-bpI1Fi_MaaPQOyp79_W_Q6TGgECiXQKywgAtBpAQCvWV # YOUR_CLIENT_SECRET
-            client-name: Auth0
-            provider: auth0
+          okta:
+            client-id: 0oaozifhhdhyAmpdB5d7   # YOUR_CLIENT_ID
+            client-secret: hiNgUbDGHK0EVpiRSK9ouRjjHJlb1wh1SLqGTqe6N2JStvC2QTJOLfG3HMcPoMPy # YOUR_CLIENT_SECRET
+            client-name: Okta
+            provider: okta
             authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:8090/login/oauth2/code/auth0" # redirect to login page in case you are not authenticated
-            scope:
-              - openid
-              - profile
-              - email
+            redirect-uri: "http://localhost:8090/login/oauth2/code/okta" # redirect to login page in case you are not authenticated
+            scope: openid, profile, email, offline_access
 
         provider:
-          auth0:
-            issuer-uri: https://dev-zrv8mh7b8k6bay3x.us.auth0.com/
+          okta:
+            issuer-uri: https://dev-93131137.okta.com/oauth2/default
+            user-name-attribute: sub
+#
+#      resourceserver:
+#        jwt:
+#          issuer-uri: https://dev-93131137.okta.com/oauth2/default
+#          jwk-set-uri: https://dev-93131137.okta.com/oauth2/default/v1/keys
+
 
 # uname-psswd based authentication. Default one for spring security
 #    user:
