@@ -82,10 +82,11 @@ spring:
           okta:
             issuer-uri: https://dev-93131137.okta.com/oauth2/default
             user-name-attribute: sub
-#
-#      resourceserver:
-#        jwt:
-#          issuer-uri: https://dev-93131137.okta.com/oauth2/default
+            token-uri: https://dev-93131137.okta.com/oauth2/default/v1/token
+
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-93131137.okta.com/oauth2/default
 #          jwk-set-uri: https://dev-93131137.okta.com/oauth2/default/v1/keys
 
 
